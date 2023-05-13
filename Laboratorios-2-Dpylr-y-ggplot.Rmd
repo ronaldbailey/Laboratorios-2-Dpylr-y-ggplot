@@ -49,7 +49,7 @@ head(dataset)
 ```
 
 
-# 1. Cree un conjunto de columnas nuevas: día, mes, año, hora y minutos a partir de la comlumna datetime, para esto investigue como puede “desarmar” la variable datetime utilizando lubridate y mutate. 
+## 1. Cree un conjunto de columnas nuevas: día, mes, año, hora y minutos a partir de la comlumna datetime, para esto investigue como puede “desarmar” la variable datetime utilizando lubridate y mutate. 
 
 
 ```{r}
@@ -75,5 +75,54 @@ head(dataset)
 
 ```
 
+## 2. ¿Qué mes es el que tiene la mayor demanda? Muestre una tabla y una gráfica
 
+
+Asumiendo que cada linea representa que un cliente haya pedido una bicicleta debo contar las filas para saber cuantas bicicletas se han pedido.
+
+```{r}
+dataset_mes_año = dataset %>% 
+                  select(año,mes) %>% 
+                  group_by(año,mes) %>%
+                  summarize(registros = n())
+
+print(dataset_mes_año)
+```
+
+crear una nueva columan de fechas para que los datos salgan ordenados
+
+```{r}
+
+dataset_mes_año <- dataset_mes_año %>%
+  mutate(año_mes = as.Date(paste(año, mes, "01", sep = "-"), format = "%Y-%m-%d"))
+
+```
+
+
+```{r}
+library(ggplot2)
+dataset_mes_año %>%
+  ggplot(aes(x = año_mes, y = registros)) +
+  geom_col(fill = "blue") +
+  scale_x_date(date_breaks = "1 year", date_labels = "%Y-%m") +
+  labs(title = "Demanda total de alquiler de bicicletas por mes",
+       x = "Mes y Año",
+       y = "Demanda total") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+```
+
+Buscando el maximo de cada columna
+
+
+```{r}
+dataset_mes_año$registros %>% max()
+
+```
+Estos serian los meses en donde hay un maximo de consumidores del servicio
+
+```{r}
+dataset_mes_año %>% filter(registros == (dataset_mes_año$registros %>% max()))
+```
 
