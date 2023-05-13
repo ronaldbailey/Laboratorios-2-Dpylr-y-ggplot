@@ -30,3 +30,10 @@ system("git add .")
 system("git commit -m \"configuracion de PDF\" ")
 system("git push")
 ```
+```{r}
+system("git add .")
+system("git commit -m \"1. Cree un conjunto de columnas nuevas:\" ")
+system("git push")
+```
+
+

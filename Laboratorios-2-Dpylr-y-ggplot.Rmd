@@ -1,18 +1,79 @@
 ---
-title: "R Notebook"
+title: "**Laboratorios #2 – Dplyr y ggplot**"
 output:
   pdf_document:
     latex_engine: pdflatex
 ---
 
+Para esta y la siguiente parte deberá subir su solución en un archivo
+.Rmd colocando la pregunta completa como Rmarkdown y la respuesta que
+considere adecuada.
 
-Este es un [R Markdown](http://rmarkdown.rstudio.com) Notebook. Cuando ejecutas el código dentro del notebook, los resultados aparecen debajo del código.
+Los sistemas de renta de bicycletas se basan en kioskos que son puestos
+en diferentes áreas de una ciudad. En estos kioskos las personas pueden
+suscribirse, rentar y devolver las bicicletas.
+Esto permite que el usuario rente un bicicleta y la pueda devolver en
+otro lado. Actualmente hay mas de 500 de estos proyectos alrededor del
+mundo.
 
-Intenta ejecutar este bloque de código haciendo clic en el botón *Run* dentro del bloque o colocando el cursor dentro de él y presionando *Ctrl+Shift+Enter*.
+Estos kioskos se vuelven sensores del flujo de personas dentro de
+ciudades.
 
-Agrega un nuevo bloque de código haciendo clic en el botón *Insert Chunk* en la barra de herramientas o presionando *Ctrl+Alt+I*.
+Su tarea es contestar las preguntas de este documento, basadas en la
+data que se presenta en el siguiente link.
 
-Cuando guardas el notebook, se guardará un archivo HTML que contiene el código y los resultados (haz clic en el botón *Preview* o presiona *Ctrl+Shift+K* para previsualizar el archivo HTML).
+- Variables
+    - **datetime**: hourly date + timestamp
+    - **season**: 1 = spring, 2 = summer, 3 = fall, 4 = winter
+    - **holiday**: whether the day is considered a holiday
+    - **workingday**: whether the day is neither a weekend nor holiday
+    - **weather**:
+        - 1: Clear, Few clouds, Partly cloudy, Partly cloudy
+        - 2: Mist + Cloudy, Mist + Broken clouds, Mist + Few clouds, Mist
+        - 3: Light Snow, Light Rain + Thunderstorm + Scattered clouds, Light Rain + Scattered clouds
+        - 4: Heavy Rain + Ice Pallets + Thunderstorm + Mist, Snow + Fog
+    - **temp**: temperature in Celsius
+    - **atemp**: "feels like" temperature in Celsius
+    - **humidity**: relative humidity
+    - **windspeed**: wind speed
+    - **casual**: number of non-registered user rentals initiated
+    - **registered**: number of registered user rentals initiated
+    - **count**: number of total rentals
+    
+```{r}
 
-La previsualización muestra una copia HTML renderizada del contenido del editor. Por lo tanto, a diferencia de *Knit*, *Preview* no ejecuta ningún bloque de código de R. En su lugar, se muestra la salida del último bloque de código ejecutado en el editor.
+dataset = read.csv("dataset.csv")
+
+head(dataset)
+
+```
+
+
+# 1. Cree un conjunto de columnas nuevas: día, mes, año, hora y minutos a partir de la comlumna datetime, para esto investigue como puede “desarmar” la variable datetime utilizando lubridate y mutate. 
+
+
+```{r}
+# bibliotecas necesarias
+library(lubridate)
+library(dplyr)
+
+# convertir la columna "dteday" a un formato de fecha y hora
+dataset$dteday <- ymd(dataset$dteday)
+
+# extraer las partes de la fecha y la hora
+dataset <- dataset %>%
+  mutate(
+    dia = day(dteday),
+    mes = month(dteday),
+    año = year(dteday),
+    hora = hour(dteday),
+    minutos = minute(dteday)
+  )
+
+# Verificar el resultado
+head(dataset)
+
+```
+
+
 
