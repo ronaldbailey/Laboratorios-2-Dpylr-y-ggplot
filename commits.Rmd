@@ -1,6 +1,8 @@
 ---
 title: "Commits"
-output: pdf_notebook
+output:
+  pdf_document:
+    latex_engine: pdflatex
 ---
 
 
@@ -17,3 +19,14 @@ system("git push")
 
 
 
+# Comandos para que R pueda crear los pdf automaticamente utilizando Mixtext
+
+library(tinytex)
+tinytex::install_tinytex()
+
+
+```{r}
+system("git add .")
+system("git commit -m \"configuracion de PDF\" ")
+system("git push")
+```
