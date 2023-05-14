@@ -279,3 +279,10 @@ head(dataset_humedad %>% arrange(registros))
 
 
 
+## 7. ¿Que condiciones climáticas serian ideales para nuestra demanda? (considere una función de densidad bivariable para la temperatura y la humedad)
+
+
+Temperaturas medias y humedades entre el 70 y menos del 90%
+
+
+

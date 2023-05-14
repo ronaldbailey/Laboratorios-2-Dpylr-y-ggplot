@@ -64,6 +64,13 @@ system("git push")
 
 ```{r}
 system("git add .")
-system("git commit -m \"5\" ")
+system("git commit -m \"6\" ")
+system("git push")
+```
+
+
+```{r}
+system("git add .")
+system("git commit -m \"7\" ")
 system("git push")
 ```
