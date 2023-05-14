@@ -285,4 +285,16 @@ head(dataset_humedad %>% arrange(registros))
 ** Temperaturas medias y humedades entre el 70 y menos del 90%
 
 
+8. Mueste una gráfica de la densidad de rentas.
 
+
+```{r}
+
+ggplot(dataset, aes(x = cnt)) +
+  geom_density(fill = "steelblue") +
+  labs(title = "Densidad de Rentas",
+       x = "Cantidad de Rentas",
+       y = "Densidad") +
+  theme_minimal()
+
+```
