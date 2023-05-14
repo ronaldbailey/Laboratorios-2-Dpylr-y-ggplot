@@ -223,17 +223,59 @@ dataset_temperatura %>%
   geom_bar(stat = "identity", fill = "steelblue") +
   geom_text(aes(label = registros), vjust = -0.5, color = "black") +
   labs(title = "Cantidad de registros por hora",
-       x = "Hora del día",
+       x = "Temperatura",
+       y = "Registros") +
+  theme_minimal()
+
+```
+
+
+```{r}
+
+head(dataset_temperatura %>% arrange(registros))
+
+```
+La demanda disminuye en temperaturas muy bajas o muy altas
+
+## 6. ¿A que humedad disminuye la demanda? Muestre una gráfica para analizar y dar su respuesta.
+
+
+```{r}
+dataset_humedad = dataset %>% 
+                  select(hum) %>% 
+                  group_by(hum) %>%
+                  summarize(registros = n())
+
+```
+
+```{r}
+dataset_humedad$registros %>% min()
+
+```
+
+```{r}
+dataset_humedad %>% filter(registros == (dataset_humedad$registros %>% min())) 
+```
+
+
+
+```{r}
+
+dataset_humedad %>%
+  ggplot(aes(x = as.factor(hum), y = registros)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  geom_text(aes(label = registros), vjust = -0.5, color = "black") +
+  labs(title = "Cantidad de registros por hora",
+       x = "Humedad",
        y = "Registros") +
   theme_minimal()
 
 ````
 ```{r}
 
-head(dataset_temperatura %>% arrange(registros))
+head(dataset_humedad %>% arrange(registros))
 
 ````
-La demanda disminuye en temperaturas muy bajas o muy altas
 
 
 
