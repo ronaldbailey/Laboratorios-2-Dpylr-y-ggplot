@@ -76,18 +76,26 @@ head(dataset)
 
 ```
 
+```{r}
+summary(dataset)
+```
+
 ## 2. ¿Qué mes es el que tiene la mayor demanda? Muestre una tabla y una gráfica
 
 
 Asumiendo que cada linea representa que un cliente haya pedido una bicicleta debo contar las filas para saber cuantas bicicletas se han pedido.
 
 ```{r}
-dataset_mes_año = dataset %>% 
-                  select(año,mes) %>% 
-                  group_by(año,mes) %>%
-                  summarize(registros = n())
+dataset_mes_año <- dataset %>% 
+                  select(año, mes, cnt) %>% 
+                  group_by(año, mes) %>%
+                  summarize(registros = sum(cnt))
 
 print(dataset_mes_año)
+```
+
+```{r}
+dataset_mes_año %>% filter(registros == (dataset_mes_año$registros %>% max()))
 ```
 
 crear una nueva columan de fechas para que los datos salgan ordenados
@@ -105,93 +113,65 @@ library(ggplot2)
 dataset_mes_año %>%
   ggplot(aes(x = año_mes, y = registros)) +
   geom_col(fill = "blue") +
-  scale_x_date(date_breaks = "1 year", date_labels = "%Y-%m") +
+  geom_text(aes(label = registros), color = "black")+
+  scale_x_date(date_breaks = "1 month", date_labels = "%Y-%m") +
   labs(title = "Demanda total de alquiler de bicicletas por mes",
        x = "Mes y Año",
        y = "Demanda total") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  theme_minimal() 
 
 ```
-
-Buscando el maximo de cada columna
 
 
 ```{r}
-dataset_mes_año$registros %>% max()
 
+dataset_mes_año %>% select(año_mes,registros) %>% print() 
+ 
 ```
-Estos serian los meses en donde hay un maximo de consumidores del servicio
 
-```{r}
-dataset_mes_año %>% filter(registros == (dataset_mes_año$registros %>% max()))
-```
 
 ## 3. ¿Qué rango de hora es la de mayor demanda? Muestre una tabla y una gráfica
 
 ```{r}
-dataset_mes_año_hora = dataset %>% 
-                  select(hora) %>% 
+dataset_mes_año_hora <- dataset %>% 
+                  select(hora, cnt) %>% 
                   group_by(hora) %>%
-                  summarize(registros = n())
+                  summarize(demanda = sum(cnt))
 
+print(dataset_mes_año_hora)
 ```
 ```{r}
-dataset_mes_año_hora$registros %>% max()
-
-```
-
-```{r}
-dataset_mes_año_hora %>% filter(registros == (dataset_mes_año_hora$registros %>% max())) 
-```
-```{r}
-dataset_mes_año_hora 
-```
-
-```{r}
-dataset_mes_año_hora %>% filter(registros == (dataset_mes_año_hora$registros %>% max())) %>% select(hora, registros)
-```
-
-
-```{r}
-
+library(ggplot2)
 dataset_mes_año_hora %>%
-  ggplot(aes(x = as.factor(hora), y = registros)) +
-  geom_bar(stat = "identity", fill = "steelblue") +
-  geom_text(aes(label = registros), vjust = -0.5, color = "black") +
-  labs(title = "Cantidad de registros por hora",
-       x = "Hora del día",
-       y = "Registros") +
-  theme_minimal()
+  ggplot(aes(x = hora, y = demanda)) +
+  geom_col(fill = "blue") +
+  geom_text(aes(label = demanda), color = "black")+
+  labs(title = "Demanda total de alquiler de bicicletas por hora",
+       x = "hora",
+       y = "Demanda total") +
+  theme_minimal() 
 
 ```
-
-si sacara el promedio por mes solo lo dividiria entre 24 porque son dos años pero tendria la misma forma la grafica.
-
+```{r}
+dataset_mes_año_hora %>% filter(demanda == (dataset_mes_año_hora$demanda %>% max()))
+```
 
 ## 4. ¿Qué temporada es la mas alta? Muestre una tabla.
 
 
 ```{r}
 dataset_temporada = dataset %>% 
-                  select(season) %>% 
+                  select(season, cnt) %>% 
                   group_by(season) %>%
-                  summarize(registros = n())
+                  summarize(demanda = sum(cnt))
 
-```
+print(dataset_temporada)
 
 
-
-```{r}
-dataset_temporada$registros %>% max()
 ```
 ```{r}
-dataset_temporada 
+dataset_temporada %>% filter(demanda == max(demanda))
 ```
-
-En la temporada 3 es la mas alta
-
-
 
 ## 5. ¿A que temperatura disminuye la demanda? Muestre una gráfica para analizar y dar su respuesta.
 
@@ -200,28 +180,40 @@ Agrupando una suma por temperatura
 
 ```{r}
 dataset_temperatura = dataset %>% 
-                  select(temp) %>% 
+                  select(temp,cnt) %>% 
                   group_by(temp) %>%
-                  summarize(registros = n())
+                  summarize(demanda = sum(cnt))
 
 ```
-
-```{r}
-dataset_temperatura$registros %>% max()
-
-```
-```{r}
-dataset_temperatura %>% filter(registros == (dataset_temperatura$registros %>% min())) 
-```
-
 
 
 ```{r}
 
 dataset_temperatura %>%
-  ggplot(aes(x = as.factor(temp), y = registros)) +
+  ggplot(aes(x = as.factor(temp), y = demanda)) +
   geom_bar(stat = "identity", fill = "steelblue") +
-  geom_text(aes(label = registros), vjust = -0.5, color = "black") +
+  geom_text(aes(label = demanda), vjust = -0.5, color = "black") +
+  labs(title = "Cantidad de registros por hora",
+       x = "Temperatura",
+       y = "Registros") +
+  theme_minimal()
+
+```
+hay un rango de temperaturas a las que disminuye la demanta por lo cual hare un top 20
+
+```{r}
+
+dataset_temperatura %>% arrange(demanda) %>% head(20)
+
+
+```
+
+```{r}
+
+dataset_temperatura %>% arrange(demanda) %>% head(20)  %>%
+  ggplot(aes(x = as.factor(temp), y = demanda)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  geom_text(aes(label = demanda), vjust = -0.5, color = "black") +
   labs(title = "Cantidad de registros por hora",
        x = "Temperatura",
        y = "Registros") +
@@ -229,32 +221,28 @@ dataset_temperatura %>%
 
 ```
 
-
-```{r}
-
-head(dataset_temperatura %>% arrange(registros))
-
-```
 La demanda disminuye en temperaturas muy bajas o muy altas
+
+
 
 ## 6. ¿A que humedad disminuye la demanda? Muestre una gráfica para analizar y dar su respuesta.
 
 
 ```{r}
 dataset_humedad = dataset %>% 
-                  select(hum) %>% 
+                  select(hum,cnt) %>% 
                   group_by(hum) %>%
-                  summarize(registros = n())
+                  summarize(demanda = sum(cnt))
 
 ```
 
 ```{r}
-dataset_humedad$registros %>% min()
+dataset_humedad$demanda %>% min()
 
 ```
 
 ```{r}
-dataset_humedad %>% filter(registros == (dataset_humedad$registros %>% min())) 
+dataset_humedad %>% filter(demanda == min(demanda)) 
 ```
 
 
@@ -262,39 +250,115 @@ dataset_humedad %>% filter(registros == (dataset_humedad$registros %>% min()))
 ```{r}
 
 dataset_humedad %>%
-  ggplot(aes(x = as.factor(hum), y = registros)) +
+  ggplot(aes(x = as.factor(hum), y = demanda)) +
   geom_bar(stat = "identity", fill = "steelblue") +
-  geom_text(aes(label = registros), vjust = -0.5, color = "black") +
+  geom_text(aes(label = demanda), vjust = -0.5, color = "black") +
   labs(title = "Cantidad de registros por hora",
        x = "Humedad",
        y = "Registros") +
   theme_minimal()
 
-````
+```
 ```{r}
 
-head(dataset_humedad %>% arrange(registros))
+dataset_humedad %>% arrange(demanda) %>% head(20)  %>%
+  ggplot(aes(x = as.factor(hum), y = demanda)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  geom_text(aes(label = demanda), vjust = -0.5, color = "black") +
+  labs(title = "Cantidad de registros por hora",
+       x = "Humedad",
+       y = "Registros") +
+  theme_minimal()
 
-````
+```
 
+Disminuye a humedades muy bajas y algunas muy altas
 
 
 ## 7. ¿Que condiciones climáticas serian ideales para nuestra demanda? (considere una función de densidad bivariable para la temperatura y la humedad)
 
+```{r}
+dataset_humedad_temperatura <- dataset %>% 
+                  select(hum, temp, cnt) %>% 
+                  group_by(hum, temp) %>%
+                  summarize(demanda = sum(cnt))
+```
 
-** Temperaturas medias y humedades entre el 70 y menos del 90%
+```{r}
 
+
+dataset_humedad_temperatura %>% ggplot(aes(x = temp, y = hum, fill = demanda)) +
+  geom_tile() +
+  scale_fill_viridis_c(option = "plasma", direction = -1) +
+  labs(title = "Mapa de calor: Demanda de alquiler de bicicletas",
+       x = "Temperatura",
+       y = "Humedad",
+       fill = "Demanda") +
+  theme_minimal()
+
+```
+
+
+
+```{r}
+dataset_humedad_temperatura %>% ggplot( aes(x = temp, y = hum, fill = demanda)) +
+  geom_density_2d() +
+  labs(title = "Densidad Bivariable: Demanda de alquiler de bicicletas",
+       x = "Temperatura",
+       y = "Humedad",
+       fill = "Demanda") +
+  theme_minimal()
+```
+
+
+con una temperatura arriba del 0.75% y una humedad arriba de 75% en en los dos casos por debajo de 90%
 
 ## 8. Mueste una gráfica de la densidad de rentas.
 
 
 ```{r}
 
-ggplot(dataset, aes(x = cnt)) +
+dataset %>% ggplot( aes(x = cnt)) +
   geom_density(fill = "steelblue") +
   labs(title = "Densidad de Rentas",
        x = "Cantidad de Rentas",
        y = "Densidad") +
   theme_minimal()
+
+```
+
+
+## 9. ¿En promedio de personas que rentan bicicletas y están registradas?
+
+```{r}
+promedio_personas_registradas <- dataset %>%
+  filter(registered > 0) %>%
+  summarise(promedio = mean(cnt))
+
+promedio_personas_registradas$promedio
+
+```
+## 10. Determine la mediana de personas que rentan bicicletas y no están registradas.
+
+```{r}
+mediana_personas_no_registradas <- dataset %>%
+  filter(registered == 0) %>%
+  summarise(mediana = median(cnt))
+
+mediana_personas_no_registradas$mediana
+```
+
+
+## 11. Deterimne la renta total, renta promedio por cada tipo de estación.
+
+
+No existen tipos de estacion solo dare la total
+
+```{r}
+renta_total <- sum(dataset$cnt)
+renta_promedio <- mean(dataset$cnt)
+
+print(paste("Renta total:", renta_total))
+print(paste("Renta promedio:", renta_promedio))
 
 ```
