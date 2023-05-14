@@ -169,5 +169,27 @@ dataset_mes_año_hora %>%
 si sacara el promedio por mes solo lo dividiria entre 24 porque son dos años pero tendria la misma forma la grafica.
 
 
+## 4. ¿Qué temporada es la mas alta? Muestre una tabla.
 
 
+```{r}
+dataset_temporada = dataset %>% 
+                  select(season) %>% 
+                  group_by(season) %>%
+                  summarize(registros = n())
+
+```
+
+
+
+```{r}
+dataset_temporada$registros %>% max()
+```
+```{r}
+dataset_temporada 
+```
+
+```{r}
+dataset_temporada %>% filter(registros == (dataset_temporada$registros %>% max())) 
+```
+En la temporada 3 es la mas alta
