@@ -362,3 +362,71 @@ print(paste("Renta total:", renta_total))
 print(paste("Renta promedio:", renta_promedio))
 
 ```
+
+
+## 12. Determine y muestre una gráfica de barras la cantidad de rentas por tipo de temporada.
+
+
+```{r}
+rentas_por_temporada <- dataset %>%
+  group_by(season) %>%
+  summarise(rentas = sum(cnt))
+
+
+ggplot(rentas_por_temporada, aes(x = factor(season), y = rentas)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  labs(title = "Cantidad de rentas por temporada",
+       x = "Temporada",
+       y = "Cantidad de rentas") +
+  theme_minimal() +
+  geom_text(aes(label = rentas), vjust = -0.5, color = "black")
+
+
+
+```
+
+
+
+## 13. Muestre una gráfica de la densidad por hora.
+
+
+```{r}
+
+dataset %>% ggplot( aes(x = hr)) +
+  geom_density(fill = "steelblue") +
+  labs(title = "Densidad de rentas por hora",
+       x = "Hora del día",
+       y = "Densidad") +
+  theme_minimal() +
+  scale_x_continuous(breaks = seq(0, 23, by = 2), labels = c("0", "2", "4", "6", "8", "10", "12", "14", "16", "18", "20", "22"))
+
+```
+
+
+
+
+## 14. Muestre una gráfica de barras por día del mes como eje x y la cantidad total de alquileres como el eje Y.
+
+
+```{r}
+# Calcular las cantidades promedio de alquileres por día del mes
+rentas_promedio_por_dia <- dataset %>%
+  group_by(dia) %>%
+  summarise(promedio_alquileres = mean(cnt))
+
+# Ordenar los días del mes de manera ascendente
+rentas_promedio_por_dia <- rentas_promedio_por_dia[order(rentas_promedio_por_dia$dia), ]
+
+# Crear etiquetas con los valores promedio
+etiquetas <- paste0(round(rentas_promedio_por_dia$promedio_alquileres))
+
+# Graficar las cantidades promedio de alquileres por día del mes
+ggplot(rentas_promedio_por_dia, aes(x = dia, y = promedio_alquileres)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  labs(title = "Cantidades promedio de alquileres por día del mes",
+       x = "Día del mes",
+       y = "Cantidad promedio de alquileres") +
+  theme_minimal() +
+  geom_text(aes(label = etiquetas), vjust = -0.5, color = "black")
+
+```
