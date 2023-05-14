@@ -42,5 +42,9 @@ system("git add .")
 system("git commit -m \"2. ¿Qué mes es el que tiene la mayor demanda?\" ")
 system("git push")
 ```
-
+```{r}
+system("git add .")
+system("git commit -m \"3. ¿Qué rango de hora es la de mayor demanda? Muestre una tabla y una gráfica\" ")
+system("git push")
+```
 

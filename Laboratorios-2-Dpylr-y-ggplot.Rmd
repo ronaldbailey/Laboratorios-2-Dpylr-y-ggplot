@@ -66,9 +66,10 @@ dataset <- dataset %>%
     dia = day(dteday),
     mes = month(dteday),
     año = year(dteday),
-    hora = hour(dteday),
-    minutos = minute(dteday)
   )
+
+
+dataset$hora =   dataset$hr
 
 # Verificar el resultado
 head(dataset)
@@ -125,4 +126,48 @@ Estos serian los meses en donde hay un maximo de consumidores del servicio
 ```{r}
 dataset_mes_año %>% filter(registros == (dataset_mes_año$registros %>% max()))
 ```
+
+## 3. ¿Qué rango de hora es la de mayor demanda? Muestre una tabla y una gráfica
+
+```{r}
+dataset_mes_año_hora = dataset %>% 
+                  select(hora) %>% 
+                  group_by(hora) %>%
+                  summarize(registros = n())
+
+```
+```{r}
+dataset_mes_año_hora$registros %>% max()
+
+```
+
+```{r}
+dataset_mes_año_hora %>% filter(registros == (dataset_mes_año_hora$registros %>% max())) 
+```
+```{r}
+dataset_mes_año_hora 
+```
+
+```{r}
+dataset_mes_año_hora %>% filter(registros == (dataset_mes_año_hora$registros %>% max())) %>% select(hora, registros)
+```
+
+
+```{r}
+
+dataset_mes_año_hora %>%
+  ggplot(aes(x = as.factor(hora), y = registros)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  geom_text(aes(label = registros), vjust = -0.5, color = "black") +
+  labs(title = "Cantidad de registros por hora",
+       x = "Hora del día",
+       y = "Registros") +
+  theme_minimal()
+
+```
+
+si sacara el promedio por mes solo lo dividiria entre 24 porque son dos años pero tendria la misma forma la grafica.
+
+
+
 
