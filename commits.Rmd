@@ -55,3 +55,8 @@ system("git push")
 ```
 
 
+```{r}
+system("git add .")
+system("git commit -m \"5. ¿A que temperatura disminuye la demanda? Muestre una gráfica para analizar y dar su respuesta.\" ")
+system("git push")
+```

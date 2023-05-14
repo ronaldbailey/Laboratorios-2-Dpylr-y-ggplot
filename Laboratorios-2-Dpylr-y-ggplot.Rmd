@@ -189,7 +189,51 @@ dataset_temporada$registros %>% max()
 dataset_temporada 
 ```
 
-```{r}
-dataset_temporada %>% filter(registros == (dataset_temporada$registros %>% max())) 
-```
 En la temporada 3 es la mas alta
+
+
+
+## 5. ¿A que temperatura disminuye la demanda? Muestre una gráfica para analizar y dar su respuesta.
+
+
+Agrupando una suma por temperatura
+
+```{r}
+dataset_temperatura = dataset %>% 
+                  select(temp) %>% 
+                  group_by(temp) %>%
+                  summarize(registros = n())
+
+```
+
+```{r}
+dataset_temperatura$registros %>% max()
+
+```
+```{r}
+dataset_temperatura %>% filter(registros == (dataset_temperatura$registros %>% min())) 
+```
+
+
+
+```{r}
+
+dataset_temperatura %>%
+  ggplot(aes(x = as.factor(temp), y = registros)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  geom_text(aes(label = registros), vjust = -0.5, color = "black") +
+  labs(title = "Cantidad de registros por hora",
+       x = "Hora del día",
+       y = "Registros") +
+  theme_minimal()
+
+````
+```{r}
+
+head(dataset_temperatura %>% arrange(registros))
+
+````
+La demanda disminuye en temperaturas muy bajas o muy altas
+
+
+
