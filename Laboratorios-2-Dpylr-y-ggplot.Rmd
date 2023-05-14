@@ -285,7 +285,7 @@ head(dataset_humedad %>% arrange(registros))
 ** Temperaturas medias y humedades entre el 70 y menos del 90%
 
 
-8. Mueste una gráfica de la densidad de rentas.
+## 8. Mueste una gráfica de la densidad de rentas.
 
 
 ```{r}
