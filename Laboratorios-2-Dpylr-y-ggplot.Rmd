@@ -451,3 +451,20 @@ ggplot(alquileres_por_fecha, aes(x = dteday, y = cantidad_alquileres)) +
   theme_minimal()
 ```
 
+
+
+
+16. Muestre una gráfica de puntos que relaciones la temperatura como ejer X y la humedad como eje Y.
+
+
+```{r}
+
+ggplot(dataset, aes(x = temp, y = hum)) +
+  geom_point(color = "steelblue") +
+  labs(title = "Relación entre temperatura y humedad",
+       x = "Temperatura",
+       y = "Humedad") +
+  theme_minimal()
+
+
+```
