@@ -90,4 +90,23 @@ system("git commit -m \"11\" ")
 system("git push")
 ```
 
+```{r}
+system("git add .")
+system("git commit -m \"14\" ")
+system("git push")
+```
 
+```{r}
+system("git add .")
+system("git commit -m \"14\" ")
+system("git push")
+```
+
+
+
+
+```{r}
+system("git add .")
+system("git commit -m \"15\" ")
+system("git push")
+```

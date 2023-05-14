@@ -430,3 +430,24 @@ ggplot(rentas_promedio_por_dia, aes(x = dia, y = promedio_alquileres)) +
   geom_text(aes(label = etiquetas), vjust = -0.5, color = "black")
 
 ```
+
+
+
+
+15. 
+
+```{r}
+
+alquileres_por_fecha <- dataset %>%
+  group_by(dteday) %>%
+  summarise(cantidad_alquileres = sum(cnt))
+
+
+ggplot(alquileres_por_fecha, aes(x = dteday, y = cantidad_alquileres)) +
+  geom_line(color = "steelblue") +
+  labs(title = "Serie temporal de alquileres",
+       x = "Fecha",
+       y = "Cantidad de alquileres") +
+  theme_minimal()
+```
+
